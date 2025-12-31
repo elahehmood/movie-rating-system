@@ -9,9 +9,8 @@ services:
       - "8000:8000"  
     volumes:
       - .:/app      
-    environment:
-      
-      - DATABASE_URL=postgresql://postgres:123456@db:5432/movie_rating_db
+    env_file:
+     - .env
     depends_on:
       - db
 
