@@ -22,7 +22,7 @@ class DirectorResponse(DirectorBase):
     class Config:
         from_attributes = True
 
-# ✅ Director ساده برای Movie Response (طبق سند)
+# ✅ Director ساده برای Movie Response
 class DirectorInMovieResponse(BaseModel):
     """Schema برای نمایش کارگردان در پاسخ فیلم"""
     id: int
@@ -32,7 +32,7 @@ class DirectorInMovieResponse(BaseModel):
 
 # --- Rating Schemas ---
 class RatingCreate(BaseModel):
-    score: int  # User only sends the score
+    score: int = Field(..., ge=1, le=10)
 
 class RatingResponse(RatingCreate):
     id: int
@@ -44,19 +44,12 @@ class RatingResponse(RatingCreate):
 class MovieBase(BaseModel):
     title: str
     release_year: int
-    cast: str = Field(..., min_items=1)  
+    cast: str = Field(..., min_length=1)
 
 # ✅ Schema برای ایجاد فیلم (POST)
 class MovieCreate(MovieBase):
     director_id: int = Field(..., gt=0)
-    genres: List[int] = Field(..., min_items=1)  # ✅ اصلاح نام: genres به جای genre_ids
-
-    # @field_validator('cast')
-    # @classmethod
-    # def validate_cast(cls, v):
-    #     if not all(isinstance(item, str) and len(item.strip()) > 0 for item in v):
-    #         raise ValueError("همه بازیگران باید رشته‌های معتبر باشند")
-    #     return v
+    genres: List[int] = Field(..., min_items=1)
 
     class Config:
         json_schema_extra = {
@@ -69,22 +62,22 @@ class MovieCreate(MovieBase):
             }
         }
 
-# ✅ Schema برای آپدیت فیلم (PATCH - برای Endpoint بعدی)
+# ✅ Schema برای آپدیت فیلم
 class MovieUpdate(BaseModel):
     title: Optional[str] = None
     release_year: Optional[int] = None
-    cast: Optional[str] = None  # ✅ اصلاح شد
+    cast: Optional[str] = None
     director_id: Optional[int] = None
-    genres: Optional[List[int]] = None  # ✅ اصلاح نام
+    genres: Optional[List[int]] = None
 
 # ✅ Schema برای پاسخ جزئیات فیلم (GET)
 class MovieResponse(MovieBase):
     id: int
-    director: DirectorInMovieResponse  # ✅ استفاده از schema ساده‌تر
-    genres: List[str]  # ✅ فقط نام ژانرها (نه کل object)
-    average_rating: Optional[float]  # ✅ اضافه شد
-    ratings_count: int  # ✅ اضافه شد
-    
+    director: DirectorInMovieResponse
+    genres: List[str]
+    average_rating: Optional[float] = None
+    ratings_count: int = 0
+
     class Config:
         from_attributes = True
 
