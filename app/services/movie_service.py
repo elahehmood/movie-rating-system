@@ -21,9 +21,6 @@ class MovieService:
         self.director_repo = director_repo
         self.genre_repo = genre_repo
 
-    # ----------------------------
-    # Helpers (business logic)
-    # ----------------------------
     def _calc_rating_stats(self, movie) -> Tuple[Optional[float], int]:
         ratings = getattr(movie, "ratings", []) or []
         scores = [r.score for r in ratings if r is not None and getattr(r, "score", None) is not None]
@@ -44,9 +41,6 @@ class MovieService:
             ratings_count=cnt,
         )
 
-    # ----------------------------
-    # Use-cases
-    # ----------------------------
     def get_movies_list(
         self,
         page: int = 1,
@@ -55,7 +49,6 @@ class MovieService:
         release_year: Optional[int] = None,
         genre_name: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Get paginated list of movies with optional filters."""
         skip = (page - 1) * page_size
 
         movies = self.movie_repo.get_all(
@@ -83,7 +76,6 @@ class MovieService:
         }
 
     def get_movie_by_id(self, movie_id: int) -> Optional[MovieResponse]:
-        """Get detailed information about a specific movie."""
         movie = self.movie_repo.get_by_id(movie_id)
         if not movie:
             return None
@@ -97,10 +89,8 @@ class MovieService:
         cast: str,
         genre_ids: List[int],
     ) -> Optional[MovieResponse]:
-        """Create a new movie with validation."""
         if not self.movie_repo.director_exists(director_id):
             return None
-
         if not self.movie_repo.genres_exist(genre_ids):
             return None
 
@@ -111,11 +101,9 @@ class MovieService:
             cast=cast,
             genre_ids=genre_ids,
         )
-
         return self._movie_to_response(created_movie)
 
     def update_movie(self, movie_id: int, movie_data: dict) -> Optional[MovieResponse]:
-        """Update an existing movie."""
         if "director_id" in movie_data and movie_data["director_id"]:
             if not self.movie_repo.director_exists(movie_data["director_id"]):
                 return None
@@ -139,5 +127,4 @@ class MovieService:
         return self._movie_to_response(updated_movie)
 
     def delete_movie(self, movie_id: int) -> bool:
-        """Delete a movie."""
         return self.movie_repo.delete(movie_id)

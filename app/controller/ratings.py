@@ -1,22 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.repositories.movie_repository import MovieRepository, get_movie_repository
-from app.schemas.schemas import RatingCreate
+from app.schemas.schemas import RatingCreate, RatingResponse
 
-router = APIRouter(prefix="/movies", tags=["ratings"])
+router = APIRouter(prefix="/movies")
 
 
-@router.post("/{movie_id}/ratings")
+@router.post("/{movie_id}/ratings", status_code=201)
 def create_rating(
-    movie_id: int = Path(..., gt=0),
-    payload: RatingCreate = ...,
+    movie_id: int,
+    payload: RatingCreate,
     movie_repo: MovieRepository = Depends(get_movie_repository),
 ):
-    if payload.score < 1 or payload.score > 10:
-        raise HTTPException(status_code=422, detail={"code": 422, "message": "score must be between 1 and 10"})
-
     rating = movie_repo.add_rating(movie_id=movie_id, score=payload.score)
     if rating is None:
-        raise HTTPException(status_code=404, detail={"code": 404, "message": "Movie not found"})
+        raise HTTPException(status_code=404, detail=f"Movie with id {movie_id} not found.")
 
-    return {"status": "success", "data": {"id": rating.id, "movie_id": rating.movie_id, "score": rating.score}}
+    return {
+        "status": "success",
+        "data": RatingResponse.model_validate(rating).model_dump(),
+    }
