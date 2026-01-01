@@ -1,6 +1,10 @@
 from fastapi import FastAPI
+from app.controller.router import api_router
 
 app = FastAPI(title="Movie Rating System")
+
+# Include API router
+app.include_router(api_router)
 
 @app.get("/")
 def health_check():
