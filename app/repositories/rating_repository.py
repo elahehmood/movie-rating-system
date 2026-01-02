@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from app.models.models import Rating
 
 class RatingRepository:
+    def __init__(self, db: Session):
+        self.db = db
     @staticmethod
     def create(db: Session, rating: Rating):
         """
