@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from app.models.models import Genre
 
 class GenreRepository:
+    def __init__(self, db: Session):
+        self.db = db
     @staticmethod
     def get_all(db: Session):
         """

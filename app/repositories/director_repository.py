@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from app.models.models import Director
 
 class DirectorRepository:
+    def __init__(self, db: Session):
+        self.db = db
     @staticmethod
     def get_by_id(db: Session, director_id: int):
         """

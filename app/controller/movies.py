@@ -1,3 +1,7 @@
+from app.core.logger import get_logger
+
+logger = get_logger("movie_rating")
+
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from typing import Optional
 
@@ -8,6 +12,22 @@ from app.services.movie_service import MovieService
 router = APIRouter()
 
 
+# @router.get("/movies/", summary="List movies (filter & pagination)")
+# def list_movies(
+#     page: int = Query(1, ge=1),
+#     page_size: int = Query(10, ge=1, le=100),
+#     title: Optional[str] = Query(None),
+#     release_year: Optional[int] = Query(None),
+#     genre: Optional[str] = Query(None),
+#     service: MovieService = Depends(get_movie_service),
+# ):
+#     return service.get_movies_list(
+#         page=page,
+#         page_size=page_size,
+#         title=title,
+#         release_year=release_year,
+#         genre_name=genre,
+#     )
 @router.get("/movies/", summary="List movies (filter & pagination)")
 def list_movies(
     page: int = Query(1, ge=1),
@@ -17,6 +37,12 @@ def list_movies(
     genre: Optional[str] = Query(None),
     service: MovieService = Depends(get_movie_service),
 ):
+    logger.info(
+        "Fetching movies list "
+        f"(page={page}, page_size={page_size}, title={title}, "
+        f"release_year={release_year}, genre={genre}, route=/api/v1/movies)"
+    )
+
     return service.get_movies_list(
         page=page,
         page_size=page_size,
