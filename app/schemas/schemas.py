@@ -43,14 +43,14 @@ class RatingResponse(RatingCreate):
 # --- Movie Schemas ---
 class MovieBase(BaseModel):
     title: str
-    release_year: int
+    release_year: int = Field(..., ge=1500, le=2030)
     cast: str = Field(..., min_length=1)
 
 # ✅ Schema برای ایجاد فیلم (POST)
 class MovieCreate(MovieBase):
     director_id: int = Field(..., gt=0)
     genres: List[int] = Field(..., min_items=1)
-
+    
     class Config:
         json_schema_extra = {
             "example": {
