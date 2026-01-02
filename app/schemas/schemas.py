@@ -32,8 +32,8 @@ class DirectorInMovieResponse(BaseModel):
 
 # --- Rating Schemas ---
 class RatingCreate(BaseModel):
-    score: int = Field(..., ge=1, le=10)
-
+    score: int 
+    # = Field(..., ge=1, le=10)
 class RatingResponse(RatingCreate):
     id: int
     movie_id: int
@@ -50,7 +50,7 @@ class MovieBase(BaseModel):
 class MovieCreate(MovieBase):
     director_id: int = Field(..., gt=0)
     genres: List[int] = Field(..., min_items=1)
-
+    release_year: int= Field(...,ge=1500,le=2030)
     class Config:
         json_schema_extra = {
             "example": {

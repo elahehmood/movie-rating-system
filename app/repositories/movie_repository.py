@@ -165,7 +165,7 @@ class MovieRepository:
 
         # delete ratings
         self.db.query(Rating).filter(Rating.movie_id == movie_id).delete()
-
+        
         # delete movie
         self.db.delete(movie)
         self.db.commit()

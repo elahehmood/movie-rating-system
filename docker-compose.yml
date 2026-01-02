@@ -1,3 +1,36 @@
+# version: '3.8'
+
+# services:
+#   # The FastAPI Application Service
+#   app:
+#     build: .
+#     container_name: movie_app
+#     ports:
+#       - "8000:8000"  
+#     volumes:
+#       - .:/app      
+#     env_file:
+#      - .env
+#     depends_on:
+#       - db
+
+#   # The PostgreSQL Database Service
+#   db:
+#     image: postgres:15
+#     container_name: movie_db
+#     restart: always
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: 123456
+#       POSTGRES_DB: movie_rating_db
+#     ports:
+#       - "5433:5432"  
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data:
+
 version: '3.8'
 
 services:
@@ -6,11 +39,12 @@ services:
     build: .
     container_name: movie_app
     ports:
-      - "8000:8000"  
+      - "8000:8000"
     volumes:
-      - .:/app      
+      - .:/app
+      - ./logs:/app/logs   # ✅ این خط جدید است
     env_file:
-     - .env
+      - .env
     depends_on:
       - db
 
@@ -24,7 +58,7 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: movie_rating_db
     ports:
-      - "5433:5432"  
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
