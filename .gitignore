@@ -1,12 +1,44 @@
-# Python
+# --- Python ---
 __pycache__/
 *.py[cod]
-venv/
-.env
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.log
 
-# IDE
+# --- Environments ---
+venv/
+.venv/
+.env
+.env.*
+!.env.example
+
+# --- Logs ---
+logs/
+
+# --- IDE ---
 .vscode/
 .idea/
 
-# Database
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Poetry / Build ---
+poetry.lock.backup
+dist/
+build/
+*.egg-info/
+
+# --- Database ---
 *.sqlite3
+*.db
+
+# --- Docker ---
+*.pid
